@@ -58,8 +58,6 @@ public class UserLoadBalance implements LoadBalance{
                     if(avgSpendTimeMaxIndex == index){
                         // 耗时最大的并发数减半
                         permits = permits/2;
-                    }else{
-                        permits = permits+50;
                     }
                     if(permits>0){
                         hasPermitArr.add(index);
