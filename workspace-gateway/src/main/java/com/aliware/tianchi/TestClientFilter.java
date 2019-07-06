@@ -65,7 +65,12 @@ public class TestClientFilter implements Filter {
                                serverLoadInfo.getClientLastAvgTimeFlag().set(false); 
                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                                String nowStr = sdf.format(new Date());
-                               System.out.println(String.format("计算每秒耗时成功,时间:%s,环境:%s,请求数:%s,平均耗时:%s",nowStr,serverLoadInfo.getQuota(), currCount ,avg));
+                               System.out.println(String.format("每秒统计数据,时间:%s,环境:%s,可用线程数:%s,请求数:%s,平均耗时:%s",
+                                   nowStr,
+                                   serverLoadInfo.getQuota(), 
+                                   limiter.get(),
+                                   currCount ,
+                                   avg));
                            }
                         }
                     }
