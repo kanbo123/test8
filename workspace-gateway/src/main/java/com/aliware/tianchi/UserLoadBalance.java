@@ -55,16 +55,15 @@ public class UserLoadBalance implements LoadBalance{
             
             if(serverLoadInfo != null){
                 int permits = limiter.get();
+                int weight = serverLoadInfo.getWeight();
                 if(permits > 0 ){
                     if(avgSpendTimeMaxIndex == index){
-                        // 耗时最大的并发数减半
-                        permits = permits/2;
+                        // 耗时最大的权重减半
+                        weight = weight/2;
                     }
-                    if(permits>0){
-                        hasPermitArr.add(index);
-                        weightArr.add(permits);
-                        totalWeight = totalWeight+permits;
-                    }
+                    hasPermitArr.add(index);
+                    weightArr.add(weight);
+                    totalWeight = totalWeight+weight;
                     
                 }
                 
