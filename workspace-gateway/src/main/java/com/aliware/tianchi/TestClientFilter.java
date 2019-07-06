@@ -1,5 +1,7 @@
 package com.aliware.tianchi;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.dubbo.common.Constants;
@@ -61,7 +63,9 @@ public class TestClientFilter implements Filter {
                                serverLoadInfo.getClientTimeSpentTotalTps().set(0);
                                serverLoadInfo.setClientLastAvgTime(endTime);
                                serverLoadInfo.getClientLastAvgTimeFlag().set(false); 
-                               System.out.println(String.format("计算每秒耗时成功,环境:%s,耗时:%s",serverLoadInfo.getQuota() ,avg));
+                               SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                               String nowStr = sdf.format(new Date());
+                               System.out.println(String.format("计算每秒耗时成功,时间:%s,环境:%s,请求数:%s,平均耗时:%s",nowStr,serverLoadInfo.getQuota(), currCount ,avg));
                            }
                         }
                     }
