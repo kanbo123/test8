@@ -57,8 +57,8 @@ public class UserLoadBalance implements LoadBalance{
                 int permits = limiter.get();
                 int weight = serverLoadInfo.getWeight();
                 if(permits > 0 ){
-                    if(avgSpendTimeMaxIndex != index){
-                        weight = weight+50;
+                    if(avgSpendTimeMaxIndex == index){
+                        weight = weight-50;
                     }
                     hasPermitArr.add(index);
                     weightArr.add(weight);
