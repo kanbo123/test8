@@ -40,7 +40,7 @@ public class ServerLoadInfo {
         
         this.quota = quota;
         this.providerThread = providerThread;
-        this.weight = this.providerThread;
+        this.weight = this.providerThread-50;
 //            if("small".equals(quota)){
 //                this.weight = 2;
 //            }else if("medium".equals(quota)){
