@@ -35,22 +35,29 @@ public class UserLoadBalance implements LoadBalance{
         List<Integer> hasPermitArr = new ArrayList<>();
         List<Integer> weightArr = new ArrayList<>();
         int avgSpendTimeMaxIndex = -1;
-        int clientTimeAvgSpend = 0;
-        int clientTimeDiff = 0;
+        int clientTimeAvgMaxSpend = 0;
+        int clientTimeAvgMinSpend = 0;
+        int clientTimeMaxDiff = 0;
         for(int index=0;index<size;index++){
             
             ServerLoadInfo serverLoadInfo = UserLoadBalanceService.getServerLoadInfo(invokers.get(index));
             if(serverLoadInfo != null){
                 int clientTimeAvgSpendCurr = serverLoadInfo.getClientTimeAvgSpentTps();
-                if(clientTimeAvgSpendCurr>clientTimeAvgSpend){
-                    if(index!=0){
-                        clientTimeDiff = clientTimeAvgSpendCurr - clientTimeAvgSpend;
-                    }
+                if(index == 0){
                     avgSpendTimeMaxIndex = index;
-                    clientTimeAvgSpend = clientTimeAvgSpendCurr;
+                    clientTimeAvgMaxSpend = clientTimeAvgSpendCurr;
+                    clientTimeAvgMinSpend = clientTimeAvgSpendCurr;
+                    continue;
+                }
+                if(clientTimeAvgSpendCurr > clientTimeAvgMaxSpend){
+                    avgSpendTimeMaxIndex = index;
+                    clientTimeAvgMaxSpend = clientTimeAvgSpendCurr;
+                }else{
+                    clientTimeAvgMinSpend = clientTimeAvgSpendCurr;
                 }
             }
         }
+        clientTimeMaxDiff = clientTimeAvgMaxSpend - clientTimeAvgMinSpend;
         // 首先获取invoker对应的服务端耗时最大的索引
         for(int index=0;index<size;index++){
             Invoker<T> invoker = invokers.get(index);
@@ -61,7 +68,7 @@ public class UserLoadBalance implements LoadBalance{
                 int permits = limiter.get();
                 int weight = serverLoadInfo.getWeight();
                 if(permits > 0 ){
-                    if(avgSpendTimeMaxIndex == index && clientTimeDiff>=20){
+                    if(avgSpendTimeMaxIndex == index && clientTimeMaxDiff>=20){
                         weight = weight/2;
                     }
                     hasPermitArr.add(index);
